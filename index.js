@@ -6,9 +6,7 @@ const port = 3000;
 const ip = '127.0.0.1';
 
 function handleResponse(request, response) {
-  const fileExtension = path.extname(request.url.toString());
   console.log(request.url);
-  console.log(fileExtension);
   const type = {
     '.css': 'text/css',
     '.git': 'image/gif',
@@ -21,18 +19,46 @@ function handleResponse(request, response) {
     '.ico': 'image/x-icon',
     '.txt': 'text/plain',
   };
+  // let filePath = `./public${request.url}`; default public dir
+  let filePath = request.url.slice(1);
+  const fileExtension = path.extname(request.url.toString());
   const contentType = { 'Content-Type': type[fileExtension] };
-  let filePath = `./public${request.url}`;
 
   // setting the default page
-  if (request.url === '/') {
+  if (
+    request.url === '/' ||
+    request.url === '/public/' ||
+    request.url === '/public'
+  ) {
     contentType['Content-Type'] = 'text/html';
     filePath = `./public/index.html`;
   }
 
+  if (request.url === '/favicon.ico') {
+    filePath = './public/favicon.ico';
+  }
+  if (request.url === '/public/memes') {
+    contentType['Content-Type'] = 'text/html';
+    filePath = `./public/memes/index.htm`;
+  }
+
+  if (!request.url.startsWith('/public') || !contentType['Content-Type']) {
+    contentType['Content-Type'] = 'text/html';
+    filePath = './err-page.html';
+  }
+
   response.writeHead(200, contentType); // "Data description"
   const readStream = fs.createReadStream(filePath); // Reading the requested file
-  readStream.pipe(response); // Forwarding the data to the user.
+  readStream
+    .on('error', (err) => {
+      // readStream err handling
+      if (err.code === 'ENOENT') {
+        const createErrReadStream = fs.createReadStream('./err-page.html');
+        response.writeHead(404, { 'Content-Type': 'text/html' });
+        createErrReadStream.pipe(response);
+      }
+    })
+    .pipe(response); // Displaying the data
 }
 
 // Creating server
