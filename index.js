@@ -42,7 +42,7 @@ function handleResponse(request, response) {
     filePath = `./public/memes/index.htm`;
   }
 
-  if (!request.url.startsWith('/public') || !contentType['Content-Type']) {
+  if (!request.url.startsWith('/public') && !contentType['Content-Type']) {
     contentType['Content-Type'] = 'text/html';
     filePath = './err-page.html';
   }
@@ -59,7 +59,6 @@ function handleResponse(request, response) {
       }
     })
     .pipe(response); // Displaying the data
-  response.end();
 }
 
 // Creating server
