@@ -59,6 +59,7 @@ function handleResponse(request, response) {
       }
     })
     .pipe(response); // Displaying the data
+  response.end();
 }
 
 // Creating server
