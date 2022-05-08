@@ -24,38 +24,41 @@ function handleResponse(request, response) {
   const fileExtension = path.extname(request.url.toString());
   const contentType = { 'Content-Type': type[fileExtension] };
 
+  console.log(contentType);
+  console.log(filePath);
   // setting the default page
-  if (
-    request.url === '/' ||
-    request.url === '/public/' ||
-    request.url === '/public'
-  ) {
+  if (!filePath || filePath === 'public/' || filePath === 'public') {
     contentType['Content-Type'] = 'text/html';
     filePath = `./public/index.html`;
   }
 
-  if (request.url === '/favicon.ico') {
+  if (filePath === 'favicon.ico') {
     filePath = './public/favicon.ico';
   }
-  if (request.url === '/public/memes') {
+  if (filePath === 'public/memes') {
     contentType['Content-Type'] = 'text/html';
     filePath = `./public/memes/index.htm`;
   }
 
-  if (!request.url.startsWith('/public') && !contentType['Content-Type']) {
+  if (!contentType['Content-Type']) {
     contentType['Content-Type'] = 'text/html';
     filePath = './err-page.html';
   }
+  // if (!filePath.startsWith('public')) {
+  //   contentType['Content-Type'] = 'text/html';
+  //   filePath = './err-page.html';
+  // }
 
-  response.writeHead(200, contentType); // "Data description"
+  console.log(contentType);
   const readStream = fs.createReadStream(filePath); // Reading the requested file
+  response.writeHead(200, contentType); // "Data description"
   readStream
     .on('error', (err) => {
       // readStream err handling
       if (err.code === 'ENOENT') {
-        const createErrReadStream = fs.createReadStream('./err-page.html');
+        const errReadStream = fs.createReadStream('./err-page.html');
         response.writeHead(404, { 'Content-Type': 'text/html' });
-        createErrReadStream.pipe(response);
+        errReadStream.pipe(response);
       }
     })
     .pipe(response); // Displaying the data
