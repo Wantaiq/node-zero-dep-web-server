@@ -19,7 +19,6 @@ function handleResponse(request, response) {
     '.ico': 'image/x-icon',
     '.txt': 'text/plain',
   };
-  // let filePath = `./public${request.url}`; default public dir
   let filePath = request.url.slice(1);
   const fileExtension = path.extname(request.url.toString());
   const contentType = { 'Content-Type': type[fileExtension] };
@@ -44,11 +43,6 @@ function handleResponse(request, response) {
     contentType['Content-Type'] = 'text/html';
     filePath = './err-page.html';
   }
-  // if (!filePath.startsWith('public')) {
-  //   contentType['Content-Type'] = 'text/html';
-  //   filePath = './err-page.html';
-  // }
-
   console.log(contentType);
   const readStream = fs.createReadStream(filePath); // Reading the requested file
   response.writeHead(200, contentType); // "Data description"
