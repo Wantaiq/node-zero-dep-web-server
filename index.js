@@ -44,7 +44,6 @@ function handleResponse(request, response) {
     filePath = './err-page.html';
   }
 
-  console.log(contentType);
   const readStream = fs.createReadStream(filePath); // Reading the requested file
   response.writeHead(200, contentType); // "Data description"
   readStream
