@@ -6,7 +6,6 @@ const port = 3000;
 const ip = '127.0.0.1';
 
 function handleResponse(request, response) {
-  console.log(request.url);
   const type = {
     '.css': 'text/css',
     '.git': 'image/gif',
@@ -23,10 +22,8 @@ function handleResponse(request, response) {
   const fileExtension = path.extname(request.url.toString());
   const contentType = { 'Content-Type': type[fileExtension] };
 
-  console.log(contentType);
-  console.log(filePath);
   // setting the default page
-  if (!filePath || filePath === 'public/' || filePath === 'public') {
+  if (!filePath || filePath === 'index.html') {
     contentType['Content-Type'] = 'text/html';
     filePath = `./public/index.html`;
   }
@@ -34,7 +31,7 @@ function handleResponse(request, response) {
   if (filePath === 'favicon.ico') {
     filePath = './public/favicon.ico';
   }
-  if (filePath === 'public/memes') {
+  if (filePath === 'memes' || filePath === 'memes/index.htm') {
     contentType['Content-Type'] = 'text/html';
     filePath = `./public/memes/index.htm`;
   }
