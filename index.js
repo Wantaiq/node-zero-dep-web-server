@@ -22,8 +22,6 @@ function handleResponse(request, response) {
   const fileExtension = path.extname(request.url.toString());
   const contentType = { 'Content-Type': type[fileExtension] };
 
-  console.log(filePath);
-  console.log(contentType);
   // setting the default page
   if (!filePath || filePath === 'index.html') {
     contentType['Content-Type'] = 'text/html';
