@@ -22,6 +22,8 @@ function handleResponse(request, response) {
   const fileExtension = path.extname(request.url.toString());
   const contentType = { 'Content-Type': type[fileExtension] };
 
+  console.log(filePath);
+  console.log(contentType);
   // setting the default page
   if (!filePath || filePath === 'index.html') {
     contentType['Content-Type'] = 'text/html';
@@ -30,6 +32,9 @@ function handleResponse(request, response) {
 
   if (filePath === 'favicon.ico') {
     filePath = './public/favicon.ico';
+  }
+  if (filePath === 'index.css') {
+    filePath = `./public/index.css`;
   }
   if (filePath === 'memes' || filePath === 'memes/index.htm') {
     contentType['Content-Type'] = 'text/html';
@@ -40,6 +45,7 @@ function handleResponse(request, response) {
     contentType['Content-Type'] = 'text/html';
     filePath = './err-page.html';
   }
+
   console.log(contentType);
   const readStream = fs.createReadStream(filePath); // Reading the requested file
   response.writeHead(200, contentType); // "Data description"
